@@ -1,6 +1,10 @@
 <template>
   <div>
-    <v-card></v-card>
+    <v-card v-for="item of exo">
+      <v-card-title>{{item.title}}</v-card-title>
+      <v-card-subtitle>{{item.subtitle}}</v-card-subtitle>
+      <v-card-text>{{item.text}}</v-card-text>
+    </v-card>
   </div>
 </template>
 
