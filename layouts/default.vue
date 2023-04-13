@@ -25,10 +25,10 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" app fixed>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn class="rightDrawer" icon @click.stop="rightDrawer = !rightDrawer">
-        <v-icon>mdi-account</v-icon>
-      </v-btn>
+  <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+  <v-btn class="ml-auto" icon @click.stop="rightDrawer = !rightDrawer">
+    <v-icon>mdi-account</v-icon>
+  </v-btn>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -40,7 +40,7 @@
         <v-img
           :aspect-ratio="16/9"
           align="center"
-          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+          src="../ynov.png"
         >
           <v-avatar
             color="primary"

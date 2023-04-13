@@ -1,12 +1,13 @@
 <template>
   <div>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@600&display=swap" rel="stylesheet">
     <v-card
       v-for="item of exo"
       :key="item.id"
       class="carte"
       @click="test"
     >
-      <v-card-title class="title">{{item.title}}</v-card-title>
+      <v-card-title style="title">{{item.title}}</v-card-title>
       <v-card-subtitle>{{item.subtitle}}</v-card-subtitle>
       <v-card-text>
         {{item.state}}
@@ -24,7 +25,7 @@ export default {
   data(){
     return{
       exo: [
-        {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'En cour', id:1},
+        {title: 'COCORICO', subtitle: 'sont t\'il bon pour vous?', state:'En cour', id:1},
         {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'Valider', id:2},
         {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'Annuler', id:3},
         {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'En cour', id:4},
@@ -40,12 +41,16 @@ export default {
 </script>
 
 <style>
+
+
+.title{
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
 .carte{
   margin-bottom: 20px;
   border-radius: 50%;
 }
-.title{
-  text-align: center;
-  font-weight: bold;
-}
+
+
 </style>
