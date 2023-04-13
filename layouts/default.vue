@@ -40,7 +40,7 @@
         <v-img
           :aspect-ratio="16/9"
           align="center"
-          src="../ynov.png"
+          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
         >
           <v-avatar
             color="primary"
@@ -162,7 +162,4 @@ export default {
 </script>
 
 <style>
-.rightDrawer{
-  float: right
-}
 </style>
