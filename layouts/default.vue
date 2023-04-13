@@ -2,18 +2,18 @@
   <v-app dark>
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="miniVariant"
       :clipped="clipped"
-      fixed
+      :mini-variant="miniVariant"
       app
+      fixed
     >
       <v-list>
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
           :to="item.to"
-          router
           exact
+          router
         >
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
@@ -24,21 +24,10 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar :clipped-left="clipped" app fixed>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="clipped = !clipped">
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="fixed = !fixed">
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-      <v-toolbar-title>{{ title }}</v-toolbar-title>
-      <v-spacer />
-      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-        <v-icon>mdi-menu</v-icon>
+      <v-btn class="rightDrawer" icon @click.stop="rightDrawer = !rightDrawer">
+        <v-icon>mdi-account</v-icon>
       </v-btn>
     </v-app-bar>
     <v-main>
@@ -46,11 +35,82 @@
         <Nuxt />
       </v-container>
     </v-main>
-    <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
+    <v-navigation-drawer v-model="rightDrawer" :right="right" fixed temporary>
       <v-list>
+        <v-img
+          :aspect-ratio="16/9"
+          align="center"
+          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+        >
+          <v-avatar
+            color="primary"
+            size="56"
+          ><img
+            alt="John"
+            src="https://cdn.vuetifyjs.com/images/john.jpg"
+          ></v-avatar>
+          <h1>{{user.name}}</h1>
+          <span>{{user.lvl}}</span>
+        </v-img>
+
+        <v-card
+          class="mx-auto"
+          max-width="400"
+        >
+          <v-card-text>
+            <h2 class="text-h6 mb-2">
+              Choisisez vos Compétance
+            </h2>
+
+            <v-chip-group
+              column
+              multiple
+            >
+              <v-chip
+                filter
+                outlined
+              >
+                Dev Mobile
+              </v-chip>
+              <v-chip
+                filter
+                outlined
+              >
+                Front-end
+              </v-chip>
+              <v-chip
+                filter
+                outlined
+              >
+                Back-end
+              </v-chip>
+              <v-chip
+                filter
+                outlined
+              >
+                Dev Web
+              </v-chip>
+              <v-chip
+                filter
+                outlined
+              >
+                Cyber Sécurité
+              </v-chip>
+              <v-chip
+                filter
+                outlined
+              >
+                Dev ops
+              </v-chip>
+            </v-chip-group>
+          </v-card-text>
+        </v-card>
 
 
-          <v-btn @click="onSwitchTheme">switch theme</v-btn>
+
+          <v-btn @click="onSwitchTheme">
+            <v-icon>mdi-theme-light-dark</v-icon>
+          </v-btn>
 
       </v-list>
     </v-navigation-drawer>
@@ -65,9 +125,16 @@ export default {
   name: 'DefaultLayout',
   data() {
     return {
-      clipped: false,
+      clipped: true,
       drawer: false,
-      fixed: false,
+      fixed: true,
+      user:{
+        name: 'Baptiste',
+        id:'456qd864dqs5',
+        role: 'Admin',
+        lvl: 'Niveau 5',
+        tags: ['Dev Web', 'Dev Mobile']
+      },
       items: [
         {
           icon: 'mdi-apps',
@@ -93,3 +160,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.rightDrawer{
+  float: right
+}
+</style>
