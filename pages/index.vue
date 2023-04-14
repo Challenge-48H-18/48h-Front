@@ -139,6 +139,7 @@ export default {
     return{
       dialog: false,
       data:[],
+      datasave:[],
       post:{
         title:'',
         content:'',
@@ -163,6 +164,7 @@ export default {
       await this.$axios.get('http://thegoodnetwork.fr/index.php/api/posts').then(response => {
         const hydraMember = response.data['hydra:member'];
         this.data = hydraMember
+        this.datasave = hydraMember
         console.log(hydraMember, 'hydramember');
       })
     } catch (error) {
@@ -172,14 +174,16 @@ export default {
   methods:{
     onSelectionChange(){
     console.log(this.chips)
-    this.data = this.data.filter(post => {
-        return post.tags.some(tag => this.chips.includes(tag.name))
-      });
+    this.data = this.datasave
+    if (this.chips.length > 0){
+      this.data = this.data.filter(item => {
+        return this.chips.every(tag => item.tags.some(itemTag => itemTag.name === tag))
+      })
+    }
     },
     remove (item) {
       console.log(this.chips)
       this.chips.splice(this.chips.indexOf(item), 1)
-      console.log(this.chips)
       },
     test(){
       this.$router.push({path: '/question'})
