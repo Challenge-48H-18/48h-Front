@@ -146,6 +146,11 @@ export default {
           title: 'Boutique',
           to: '/shop',
         },
+        {
+          icon: 'mdi-shopping',
+          title: 'test',
+          to: '/test',
+        },
       ],
       miniVariant: false,
       right: true,

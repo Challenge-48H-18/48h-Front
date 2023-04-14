@@ -113,11 +113,12 @@ export default {
     return{
       dialog: false,
       data:[],
+      enCour:'En cours',
       search:'',
       post:{
         title:'',
         content:'',
-        state:'/index.php/api/states/37',
+        state:'/index.php/api/states/En%20cours',
         tags:[],
         userId:'/index.php/api/users/422',
         slug:'LINK',
@@ -137,6 +138,12 @@ export default {
         const hydraMember = response.data['hydra:member'];
         this.data = hydraMember
         console.log(hydraMember, 'hydramember');
+        console.log(this.data[1].state.name, "state")
+
+        const filteredData = this.data.filter(item => item.state.name.toLowerCase().includes('En Cours'));
+        filteredData.sort((a, b) => a.state.name.localeCompare(b.state.name));
+        this.data= filteredData
+        console.log(filteredData, 'data filtrer')
       })
     } catch (error) {
       console.error('Erreur lors de la récupération des données:', error);
@@ -149,6 +156,9 @@ export default {
       filteredData.sort((a, b) => a.title.localeCompare(b.title));
       return filteredData;
     }
+  },
+  mounted() {
+
   },
   methods:{
     test(){

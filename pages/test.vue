@@ -29,11 +29,8 @@ export default {
     }
   }, async fetch(){
     try {
-      await this.$axios.get('http://thegoodnetwork.fr/index.php/api/states/En%20cours').then(response => {
-        const hydraMember = response.data['hydra:member'];
-        this.data = hydraMember
-        console.log(hydraMember, 'hydramember');
-      })
+      const test = await this.$axios.get('http://thegoodnetwork.fr/index.php/api/states/En%20cours')
+      console.log(test)
     } catch (error) {
       console.error('Erreur lors de la récupération des données:', error);
     }
