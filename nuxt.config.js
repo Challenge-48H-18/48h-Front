@@ -4,7 +4,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - 48h',
-    title: '48h',
+    title: 'StudyBuddy',
     htmlAttrs: {
       lang: 'en',
     },

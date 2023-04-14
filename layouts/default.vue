@@ -26,6 +26,7 @@
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" app fixed>
   <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <span class="titre" @click="hihi">StudyBuddy V1.0.2</span>
   <v-btn class="ml-auto" icon @click.stop="rightDrawer = !rightDrawer">
     <v-icon>mdi-account</v-icon>
   </v-btn>
@@ -125,6 +126,7 @@ export default {
   name: 'DefaultLayout',
   data() {
     return {
+      ahah:0,
       clipped: true,
       drawer: false,
       fixed: true,
@@ -147,9 +149,9 @@ export default {
           to: '/shop',
         },
         {
-          icon: 'mdi-shopping',
-          title: 'test',
-          to: '/test',
+          icon: 'mdi-archive',
+          title: 'Archive',
+          to: '/archive',
         },
       ],
       miniVariant: false,
@@ -161,10 +163,92 @@ export default {
   methods:{
     onSwitchTheme(){
       this.$vuetify.theme.isDark = !this.$vuetify.theme.isDark
+    },
+    hihi(){
+      if (this.ahah <4){
+        this.ahah++
+      }else{
+        this.ahah=0
+        alert("Gros Con");
+
+      }
     }
   }
 }
 </script>
 
 <style>
+.titre{
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+  animation: texteAnimation 15s infinite;
+}
+@keyframes texteAnimation {
+  0% {
+    color: #fff;
+  }
+  5% {
+    color: #f00;
+  }
+  10% {
+    color: #0f0;
+  }
+  15% {
+    color: #00f;
+  }
+  20% {
+    color: #ff0;
+  }
+  25% {
+    color: #f0f;
+  }
+  30% {
+    color: #0ff;
+  }
+  35% {
+    color: #f90;
+  }
+  40% {
+    color: #9f0;
+  }
+  45% {
+    color: #09f;
+  }
+  50% {
+    color: #f09;
+  }
+  55% {
+    color: #90f;
+  }
+  60% {
+    color: #f60;
+  }
+  65% {
+    color: #6f0;
+  }
+  70% {
+    color: #06f;
+  }
+  75% {
+    color: #6ff;
+  }
+  80% {
+    color: #f6f;
+  }
+  85% {
+    color: #69f;
+  }
+  90% {
+    color: #f99;
+  }
+  95% {
+    color: #9f9;
+  }
+  100% {
+    color: #f39;
+  }
+}
 </style>

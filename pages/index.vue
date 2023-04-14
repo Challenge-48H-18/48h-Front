@@ -1,68 +1,5 @@
 <template>
   <div>
-    <div>
-      <v-text-field v-model="searchText" label="Search" @input="onFilter" />
-      <div v-for="item in data" :key="item.id">
-        {{ item.name }}
-      </div>
-    </div>
-    <div class="filtre">
-      <v-card-text>
-        <h2 class="text-h6 mb-2">
-          Choisisez vos Compétance
-        </h2>
-
-        <v-chip-group
-          v-model="selectedFilters"
-          column
-          multiple
-          @change="onFilter"
-        >
-          <v-chip
-            filter
-            outlined
-            value="Dev"
-          >
-            Dev
-          </v-chip>
-          <v-chip
-            filter
-            outlined
-            value="System"
-          >
-            System
-          </v-chip>
-          <v-chip
-            filter
-            outlined
-            value="Reseaux"
-          >
-            Reseaux
-          </v-chip>
-          <v-chip
-            filter
-            outlined
-            value="Cyber"
-          >
-            Cyber
-          </v-chip>
-          <v-chip
-            filter
-            outlined
-            value="IOT"
-          >
-            IOT
-          </v-chip>
-          <v-chip
-            filter
-            outlined
-            value="Général"
-          >
-            Général
-          </v-chip>
-        </v-chip-group>
-      </v-card-text>
-    </div>
     <div class="dialog">
       <v-row justify="center">
         <v-dialog
@@ -107,7 +44,7 @@
                     sm="6"
                   >
                     <v-autocomplete
-                      v-model="post.tags"
+                      v-model="posttag"
                       :items="['Dev', 'System', 'Reseaux', 'Cyber', 'IOT', 'Général']"
                       label="Tags"
                       multiple
@@ -138,9 +75,73 @@
         </v-dialog>
       </v-row>
     </div>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@600&display=swap" rel="stylesheet">
+    <div align="center">
+      <div >
+        <v-text-field
+          v-model="searchText"
+          filled
+          rounded
+          dense
+          class="recherche"
+          label="Search"
+          @input="onFilter" />
+      </div>
+      <div class="filtre">
+        <v-card-text class="centered">
+          <v-chip-group
+            v-model="selectedFilters"
+            column
+            multiple
+            @change="onFilter"
+          >
+            <v-chip
+              filter
+              outlined
+              value="Dev"
+            >
+              Dev
+            </v-chip>
+            <v-chip
+              filter
+              outlined
+              value="System"
+            >
+              System
+            </v-chip>
+            <v-chip
+              filter
+              outlined
+              value="Reseaux"
+            >
+              Reseaux
+            </v-chip>
+            <v-chip
+              filter
+              outlined
+              value="Cyber"
+            >
+              Cyber
+            </v-chip>
+            <v-chip
+              filter
+              outlined
+              value="IOT"
+            >
+              IOT
+            </v-chip>
+            <v-chip
+              filter
+              outlined
+              value="Général"
+            >
+              Général
+            </v-chip>
+          </v-chip-group>
+        </v-card-text>
+      </div>
+    </div>
     <v-card
-      v-for="item of data"
+      v-for="item of paginatedItems"
       :key="item.id"
       class="carte"
       @click="test(item)"
@@ -165,6 +166,7 @@
         </p>
       </v-card-text>
     </v-card>
+    <v-pagination v-model="currentPage" :length="numPages"></v-pagination>
   </div>
 </template>
 
@@ -176,8 +178,13 @@ export default {
       dialog: false,
       data:[],
       datasave:[],
+      posttag:[],
+      currentPage: 1,
+      itemsPerPage: 7,
       searchText: '',
       selectedFilters: [],
+      username:'Baptiste',
+      postId:0,
       post:{
         title:'',
         content:'',
@@ -201,10 +208,22 @@ export default {
       console.error(error)
     }
   },
+  computed: {
+    paginatedItems() {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.data.slice(startIndex, endIndex);
+    },
+    numPages() {
+      if (this.data.length > 10) {
+        return Math.ceil(this.data.length / this.itemsPerPage);
+      }
+      return 0;
+    }
+  },
   methods:{
     onFilter(){
-      // console.log(this.selectedFilters)
-      // console.log(this.searchText)
+      this.currentPage=1
       this.data = this.datasave
       if (this.searchText.length > 0){
         this.data = this.data.filter(post => {
@@ -218,7 +237,6 @@ export default {
       }
     },
     remove (item) {
-      console.log(this.chips)
       this.chips.splice(this.chips.indexOf(item), 1)
       this.data = this.datasave
       this.data = this.data.filter(post => {
@@ -227,22 +245,27 @@ export default {
     },
     test(item){
       this.$router.push({path: '/question', query: { id: item.id }})
-      console.log(item, 'item envoyer')
     },
-    onPost(){
+   async onPost(){
       this.dialog =false
-      this.sendMessage()
+
       this.format()
-      this.$axios.post('http://thegoodnetwork.fr/index.php/api/posts', this.post )
+      let valTemp =0
+      await this.$axios.post('http://thegoodnetwork.fr/index.php/api/posts', this.post )
         .then(function (response) {
-          console.log(response);
+          valTemp = response.data.id
         })
         .catch(function (error) {
-          console.log(error);
+          console.error(error);
         });
+      this.postId = valTemp
 
+     this.sendMessage()
       this.post.tags = []
 
+     setTimeout(()=>{
+       location.reload();
+     },1000)
 
     },
     cancelPost(){
@@ -260,7 +283,7 @@ export default {
   request.setRequestHeader('Content-type', 'application/json');
 
       const tags=[]
-      for (const item of this.post.tags){
+      for (const item of this.posttag){
         switch (item) {
           case "Dev":
             tags.push("<@&1096093160318439454>")
@@ -283,14 +306,20 @@ export default {
         }
       }
   const tagString = tags.join(' ')
-
+  const localUrl= 'http://localhost:3000/question?id=' + this.postId
   const myEmbed = {
     title: this.post.title,
     author:{
-      name: this.post.username + '\n' + ' TicketID : ' + this.post.id
+      name: 'Ouvert par : ' + this.username + '\n'
     },
-    description: this.post.content + '\n\n' + tagString ,
-    color: '2542600'
+    description: this.post.content + '\n\n' + tagString,
+    fields: [
+      {
+        name: 'Cliquez ici pour voir le ticket',
+        value: `[Lien du ticket](${localUrl})`
+      }
+    ],
+    color: 4324192
   }
   const params = {
     embeds: [myEmbed]
@@ -301,12 +330,12 @@ export default {
   },
     format(){
 
-      this.post.tags= this.post.tags.map(key=>{
+      this.post.tags= this.posttag.map(key=>{
         return `/index.php/api/tags/${key}`
       })
 
     }
-  }
+  },
 }
 </script>
 
@@ -320,6 +349,18 @@ export default {
   margin-bottom: 5%;
   margin-top: 5%;
 }
-
+.recherche{
+  border-radius: 15px;
+  width: 50%;
+  color: red;
+}
+.filtre{
+  margin-top: -40px;
+}
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 </style>
