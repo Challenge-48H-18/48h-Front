@@ -226,8 +226,8 @@ export default {
       });
     },
     test(item){
-      this.$router.push({path: '/question'})
-      console.log(item)
+      this.$router.push({path: '/question', query: { id: item.id }})
+      console.log(item, 'item envoyer')
     },
     onPost(){
       this.dialog =false
