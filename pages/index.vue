@@ -10,17 +10,17 @@
           <template #activator="{ on, attrs }">
                         <div class="filtre">
               <template>
-  <v-combobox
-    v-model="chips"
-    :items="items"
-    chips
-    clearable
-    label=""
-    multiple
-    prepend-icon="mdi-filter-variant"
-    solo
-    @change="onSelectionChange"
-  >
+                <v-combobox
+                  v-model="chips"
+                  :items="items"
+                  chips
+                  clearable
+                  label=""
+                  multiple
+                  prepend-icon="mdi-filter-variant"
+                  solo
+                  @change="onSelectionChange"
+                  >
     <template v-slot:selection="{ attrs, item, selected }">
       <v-chip
         v-bind="attrs"
