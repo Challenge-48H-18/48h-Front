@@ -20,7 +20,7 @@
 
           <v-card>
             <v-card-title>
-              <span class="text-h5">Crée un ticket</span>
+              <span class="text-h5">Ouvrir un ticket</span>
             </v-card-title>
             <v-card-text>
               <v-container>
@@ -61,14 +61,14 @@
                 text
                 @click="cancelPost"
               >
-                Close
+                Annuler
               </v-btn>
               <v-btn
                 color="blue darken-1"
                 text
                 @click="onPost"
               >
-                Save
+                Poster
               </v-btn>
             </v-card-actions>
           </v-card>
