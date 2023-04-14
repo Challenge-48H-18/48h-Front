@@ -1,6 +1,68 @@
 <template>
   <div>
-    <v-text-field v-model="search" label="rechercher"></v-text-field>
+    <div>
+      <v-text-field v-model="searchText" label="Search" @input="onFilter" />
+      <div v-for="item in data" :key="item.id">
+        {{ item.name }}
+      </div>
+    </div>
+    <div class="filtre">
+      <v-card-text>
+        <h2 class="text-h6 mb-2">
+          Choisisez vos Compétance
+        </h2>
+
+        <v-chip-group
+          v-model="selectedFilters"
+          column
+          multiple
+          @change="onFilter"
+        >
+          <v-chip
+            filter
+            outlined
+            value="Dev"
+          >
+            Dev
+          </v-chip>
+          <v-chip
+            filter
+            outlined
+            value="System"
+          >
+            System
+          </v-chip>
+          <v-chip
+            filter
+            outlined
+            value="Reseaux"
+          >
+            Reseaux
+          </v-chip>
+          <v-chip
+            filter
+            outlined
+            value="Cyber"
+          >
+            Cyber
+          </v-chip>
+          <v-chip
+            filter
+            outlined
+            value="IOT"
+          >
+            IOT
+          </v-chip>
+          <v-chip
+            filter
+            outlined
+            value="Général"
+          >
+            Général
+          </v-chip>
+        </v-chip-group>
+      </v-card-text>
+    </div>
     <div class="dialog">
       <v-row justify="center">
         <v-dialog
@@ -78,10 +140,10 @@
     </div>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@600&display=swap" rel="stylesheet">
     <v-card
-      v-for="item of filteredItems"
+      v-for="item of data"
       :key="item.id"
       class="carte"
-      @click="test"
+      @click="test(item)"
     >
       <v-card-title >{{item.title}}</v-card-title>
       <v-card-subtitle>{{item.content}}</v-card-subtitle>
@@ -113,8 +175,9 @@ export default {
     return{
       dialog: false,
       data:[],
-      enCour:'En cours',
-      search:'',
+      datasave:[],
+      searchText: '',
+      selectedFilters: [],
       post:{
         title:'',
         content:'',
@@ -123,51 +186,53 @@ export default {
         userId:'/index.php/api/users/422',
         slug:'LINK',
       },
-      exo: [
-        {title: 'COCORICO', subtitle: 'sont t\'il bon pour vous?', state:'En cour', id:1},
-        {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'Valider', id:2},
-        {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'Annuler', id:3},
-        {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'En cour', id:4},
-      ]
     }
   },
   async fetch(){
-    // await store.dispatch('fetchData', $axios)
     try {
       await this.$axios.get('http://thegoodnetwork.fr/index.php/api/posts').then(response => {
         const hydraMember = response.data['hydra:member'];
         this.data = hydraMember
         console.log(hydraMember, 'hydramember');
-        console.log(this.data[1].state.name, "state")
-
-        const filteredData = this.data.filter(item => item.state.name.toLowerCase().includes('En Cours'));
-        filteredData.sort((a, b) => a.state.name.localeCompare(b.state.name));
-        this.data= filteredData
-        console.log(filteredData, 'data filtrer')
+        this.data = this.data.filter(item => item.state.name.toLowerCase().includes("en cours"));
+        this.datasave = this.data
       })
     } catch (error) {
-      console.error('Erreur lors de la récupération des données:', error);
+      console.error(error)
     }
-  },
-
-  computed:{
-    filteredItems() {
-      const filteredData = this.data.filter(item => item.title.toLowerCase().includes(this.search.toLowerCase()));
-      filteredData.sort((a, b) => a.title.localeCompare(b.title));
-      return filteredData;
-    }
-  },
-  mounted() {
-
   },
   methods:{
-    test(){
+    onFilter(){
+      // console.log(this.selectedFilters)
+      // console.log(this.searchText)
+      this.data = this.datasave
+      if (this.searchText.length > 0){
+        this.data = this.data.filter(post => {
+          return post.title.toLowerCase().includes(this.searchText.toLowerCase())
+        });
+      }
+      if (this.selectedFilters.length > 0){
+        this.data = this.data.filter(post => {
+          return post.tags.some(tag => this.selectedFilters.includes(tag.name))
+        });
+      }
+    },
+    remove (item) {
+      console.log(this.chips)
+      this.chips.splice(this.chips.indexOf(item), 1)
+      this.data = this.datasave
+      this.data = this.data.filter(post => {
+        return post.tags.some(tag => this.chips.includes(tag.name))
+      });
+    },
+    test(item){
       this.$router.push({path: '/question'})
+      console.log(item)
     },
     onPost(){
       this.dialog =false
+      this.sendMessage()
       this.format()
-      console.log(this.post)
       this.$axios.post('http://thegoodnetwork.fr/index.php/api/posts', this.post )
         .then(function (response) {
           console.log(response);
@@ -176,7 +241,9 @@ export default {
           console.log(error);
         });
 
-    this.sendMessage()
+      this.post.tags = []
+
+
     },
     cancelPost(){
       this.dialog = false
@@ -189,7 +256,7 @@ export default {
 
     sendMessage() {
   const request = new XMLHttpRequest();
-  request.open("POST", "https://discord.com/api/webhooks/1095989356629594142/RF1aFmH18gYqNwELvmCIg5AHCTePAYj6CnV0T-cpwWgnQq2kOAfLvPqTnMxe5sEaSxC-");
+  request.open("POST", "https://discordapp.com/api/webhooks/1096438463085162536/r3nKYbNgzhVhVNQDCBvZfRqkw5coh0E6Gw0zkerBgGfT9DFMKkXKuJWyL8jnxBrTKRU1");
   request.setRequestHeader('Content-type', 'application/json');
 
       const tags=[]
@@ -215,8 +282,8 @@ export default {
             break;
         }
       }
-
   const tagString = tags.join(' ')
+
   const myEmbed = {
     title: this.post.title,
     author:{
