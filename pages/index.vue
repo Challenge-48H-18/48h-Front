@@ -8,6 +8,33 @@
           persistent
         >
           <template #activator="{ on, attrs }">
+                        <div class="filtre">
+              <template>
+  <v-combobox
+    v-model="chips"
+    :items="items"
+    chips
+    clearable
+    label=""
+    multiple
+    prepend-icon="mdi-filter-variant"
+    solo
+    @change="onSelectionChange"
+  >
+    <template v-slot:selection="{ attrs, item, selected }">
+      <v-chip
+        v-bind="attrs"
+        :input-value="selected"
+        close
+        @click:close="remove(item)"
+      >
+        <strong>{{ item }}</strong>&nbsp;
+      </v-chip>
+    </template>
+  </v-combobox>
+</template>
+
+            </div>
             <v-btn
               color="primary"
               dark
@@ -125,7 +152,9 @@ export default {
         {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'Valider', id:2},
         {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'Annuler', id:3},
         {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'En cour', id:4},
-      ]
+      ],
+      chips: [],
+      items: ['Dev', 'System', 'Reseaux', 'Cyber', 'IOT', 'Général'],
     }
   },
   async fetch(){
@@ -141,6 +170,17 @@ export default {
     }
   },
   methods:{
+    onSelectionChange(){
+    console.log(this.chips)
+    this.data = this.data.filter(post => {
+        return post.tags.some(tag => this.chips.includes(tag.name))
+      });
+    },
+    remove (item) {
+      console.log(this.chips)
+      this.chips.splice(this.chips.indexOf(item), 1)
+      console.log(this.chips)
+      },
     test(){
       this.$router.push({path: '/question'})
     },
