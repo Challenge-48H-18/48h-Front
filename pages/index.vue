@@ -34,7 +34,7 @@
                   </v-col>
                   <v-col cols="12">
                     <v-textarea
-                      v-model="post.desc"
+                      v-model="post.content"
                       label="Description du problème "
                       required
                     ></v-textarea>
@@ -77,18 +77,29 @@
     </div>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@600&display=swap" rel="stylesheet">
     <v-card
-      v-for="item of exo"
+      v-for="item of data"
       :key="item.id"
       class="carte"
       @click="test"
     >
-      <v-card-title :style="title">{{item.title}}</v-card-title>
-      <v-card-subtitle>{{item.subtitle}}</v-card-subtitle>
+      <v-card-title >{{item.title}}</v-card-title>
+      <v-card-subtitle>{{item.content}}</v-card-subtitle>
       <v-card-text>
-        {{item.state}}
-        <v-icon v-if="item.state==='En cour'" color="primary" large>mdi-dots-horizontal</v-icon>
-        <v-icon v-if="item.state==='Annuler'" color="red" large>mdi-close</v-icon>
-        <v-icon v-if="item.state==='Valider'" color="green" large>mdi-check</v-icon>
+        {{item.state.name}}
+        <v-icon v-if="item.state.name==='En cours'" color="primary" large>mdi-dots-horizontal</v-icon>
+        <v-icon v-if="item.state.name==='Abandonner'" color="red" large>mdi-close</v-icon>
+        <v-icon v-if="item.state.name==='Terminer'" color="green" large>mdi-check</v-icon>
+        <br>
+        <div>
+          <p>tags :
+            <span
+              v-for="tags of item.tags"
+              :key="tags.id">{{tags.name}}  </span>
+          </p>
+        </div>
+        <p>
+          Ouvert par : {{item.userId.name}}
+        </p>
       </v-card-text>
     </v-card>
   </div>
@@ -100,12 +111,14 @@ export default {
   data(){
     return{
       dialog: false,
+      data:[],
       post:{
         title:'',
-        desc:'',
-        id:'10',
-        username: 'Baptiste',
-        tags:[]
+        content:'',
+        tags:[],
+        userId:'/index.php/api/users/122',
+        crateAt: new Date(),
+        slug:'LINK',
       },
       exo: [
         {title: 'COCORICO', subtitle: 'sont t\'il bon pour vous?', state:'En cour', id:1},
@@ -113,6 +126,18 @@ export default {
         {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'Annuler', id:3},
         {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'En cour', id:4},
       ]
+    }
+  },
+  async fetch(){
+    // await store.dispatch('fetchData', $axios)
+    try {
+      await this.$axios.get('http://thegoodnetwork.fr/index.php/api/posts').then(response => {
+        const hydraMember = response.data['hydra:member'];
+        this.data = hydraMember
+        console.log(hydraMember, 'hydramember');
+      })
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données:', error);
     }
   },
   methods:{
@@ -168,15 +193,16 @@ export default {
     author:{
       name: this.post.username + '\n' + ' TicketID : ' + this.post.id
     },
-    description: this.post.desc + '\n\n' + tagString ,
+    description: this.post.content + '\n\n' + tagString ,
     color: '2542600'
   }
   const params = {
     embeds: [myEmbed]
   }
 
-  request.send(JSON.stringify(params));
-},
+    request.send(JSON.stringify(params));
+
+  },
   }
 }
 </script>

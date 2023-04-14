@@ -137,14 +137,14 @@ export default {
       },
       items: [
         {
-          icon: 'mdi-apps',
-          title: 'Welcome',
+          icon: 'mdi-ticket',
+          title: 'Accueil Ticket',
           to: '/',
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire',
+          icon: 'mdi-shopping',
+          title: 'Boutique',
+          to: '/shop',
         },
       ],
       miniVariant: false,
