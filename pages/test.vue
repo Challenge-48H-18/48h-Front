@@ -27,16 +27,20 @@ export default {
       }
 
     }
+  }, async fetch(){
+    try {
+      await this.$axios.get('http://thegoodnetwork.fr/index.php/api/states/En%20cours').then(response => {
+        const hydraMember = response.data['hydra:member'];
+        this.data = hydraMember
+        console.log(hydraMember, 'hydramember');
+      })
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données:', error);
+    }
   },
   methods:{
     send(){
       console.log(this.data)
-      // try {
-      //   await this.$axios.post('http://thegoodnetwork.fr/index.php/api/users', this.data)
-      // } catch (error) {
-      //   console.error('Erreur lors de la récupération des données:', error);
-      // }
-
      this.$axios.post('http://thegoodnetwork.fr/index.php/api/users', this.data )
         .then(function (response) {
           console.log(response);

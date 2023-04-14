@@ -1,5 +1,6 @@
 <template>
   <div>
+    <v-text-field v-model="search" label="rechercher"></v-text-field>
     <div class="dialog">
       <v-row justify="center">
         <v-dialog
@@ -77,7 +78,7 @@
     </div>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@600&display=swap" rel="stylesheet">
     <v-card
-      v-for="item of data"
+      v-for="item of filteredItems"
       :key="item.id"
       class="carte"
       @click="test"
@@ -112,12 +113,13 @@ export default {
     return{
       dialog: false,
       data:[],
+      search:'',
       post:{
         title:'',
         content:'',
+        state:'/index.php/api/states/37',
         tags:[],
-        userId:'/index.php/api/users/122',
-        crateAt: new Date(),
+        userId:'/index.php/api/users/422',
         slug:'LINK',
       },
       exo: [
@@ -140,12 +142,29 @@ export default {
       console.error('Erreur lors de la récupération des données:', error);
     }
   },
+
+  computed:{
+    filteredItems() {
+      const filteredData = this.data.filter(item => item.title.toLowerCase().includes(this.search.toLowerCase()));
+      filteredData.sort((a, b) => a.title.localeCompare(b.title));
+      return filteredData;
+    }
+  },
   methods:{
     test(){
       this.$router.push({path: '/question'})
     },
     onPost(){
       this.dialog =false
+      this.format()
+      console.log(this.post)
+      this.$axios.post('http://thegoodnetwork.fr/index.php/api/posts', this.post )
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
 
     this.sendMessage()
     },
@@ -203,6 +222,13 @@ export default {
     request.send(JSON.stringify(params));
 
   },
+    format(){
+
+      this.post.tags= this.post.tags.map(key=>{
+        return `/index.php/api/tags/${key}`
+      })
+
+    }
   }
 }
 </script>
