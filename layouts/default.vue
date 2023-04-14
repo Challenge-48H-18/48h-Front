@@ -146,6 +146,11 @@ export default {
           title: 'Boutique',
           to: '/shop',
         },
+        {
+          icon: '',
+          title: 'Ticket resolu',
+          to: '/finish',
+        }
       ],
       miniVariant: false,
       right: true,
