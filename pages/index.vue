@@ -1,5 +1,69 @@
 <template>
+  
   <div>
+    <div>
+    <v-text-field v-model="searchText" label="Search" @input="onFilter" />
+    <div v-for="item in data" :key="item.id">
+      {{ item.name }}
+    </div>
+  </div>
+    <div class="filtre">
+      <v-card-text>
+        <h2 class="text-h6 mb-2">
+          Choisisez vos Compétance
+        </h2>
+
+        <v-chip-group
+          column
+          multiple
+          v-model="selectedFilters"
+          @change="onFilter"
+        >
+          <v-chip
+            filter
+            outlined
+            value="Dev"
+          >
+            Dev
+          </v-chip>
+          <v-chip
+            filter
+            outlined
+            value="System"
+          >
+            System
+          </v-chip>
+          <v-chip
+            filter
+            outlined
+            value="Reseaux"
+          >
+            Reseaux
+          </v-chip>
+          <v-chip
+            filter
+            outlined
+            value="Cyber"
+          >
+            Cyber
+          </v-chip>
+          <v-chip
+            filter
+            outlined
+            value="IOT"
+          >
+          IOT
+          </v-chip>
+          <v-chip
+            filter
+            outlined
+            value="Général"
+          >
+          Général
+          </v-chip>
+        </v-chip-group>
+      </v-card-text>
+    </div>
     <div class="dialog">
       <v-row justify="center">
         <v-dialog
@@ -8,33 +72,6 @@
           persistent
         >
           <template #activator="{ on, attrs }">
-                        <div class="filtre">
-              <template>
-                <v-combobox
-                  v-model="chips"
-                  :items="items"
-                  chips
-                  clearable
-                  label=""
-                  multiple
-                  prepend-icon="mdi-filter-variant"
-                  solo
-                  @change="onSelectionChange"
-                  >
-    <template v-slot:selection="{ attrs, item, selected }">
-      <v-chip
-        v-bind="attrs"
-        :input-value="selected"
-        close
-        @click:close="remove(item)"
-      >
-        <strong>{{ item }}</strong>&nbsp;
-      </v-chip>
-    </template>
-  </v-combobox>
-</template>
-
-            </div>
             <v-btn
               color="primary"
               dark
@@ -154,8 +191,10 @@ export default {
         {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'Annuler', id:3},
         {title: 'les chocolat', subtitle: 'sont t\'il bon pour vous?', state:'En cour', id:4},
       ],
-      chips: [],
-      items: ['Dev', 'System', 'Reseaux', 'Cyber', 'IOT', 'Général'],
+      searchText: '',
+      selectedFilters: [],
+
+
     }
   },
   async fetch(){
@@ -172,18 +211,28 @@ export default {
     }
   },
   methods:{
-    onSelectionChange(){
-    console.log(this.chips)
-    this.data = this.datasave
-    if (this.chips.length > 0){
-      this.data = this.data.filter(item => {
-        return this.chips.every(tag => item.tags.some(itemTag => itemTag.name === tag))
-      })
-    }
+    onFilter(){
+      // console.log(this.selectedFilters)
+      // console.log(this.searchText)
+      this.data = this.datasave
+      if (this.searchText.length > 0){
+        this.data = this.data.filter(post => {
+          return post.title.toLowerCase().includes(this.searchText.toLowerCase())
+        });
+      }
+      if (this.selectedFilters.length > 0){
+      this.data = this.data.filter(post => {
+          return post.tags.some(tag => this.selectedFilters.includes(tag.name))
+        });
+      }
     },
     remove (item) {
       console.log(this.chips)
       this.chips.splice(this.chips.indexOf(item), 1)
+      this.data = this.datasave
+      this.data = this.data.filter(post => {
+        return post.tags.some(tag => this.chips.includes(tag.name))
+      });
       },
     test(){
       this.$router.push({path: '/question'})
