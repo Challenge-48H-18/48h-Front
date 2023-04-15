@@ -170,7 +170,7 @@
         </p>
       </v-card-text>
     </v-card>
-    <v-pagination v-model="currentPage" :length="numPages"></v-pagination>
+    <v-pagination v-model="currentPage" :total-visible="7" :length="numPages"></v-pagination>
   </div>
 </template>
 
