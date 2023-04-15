@@ -28,6 +28,7 @@
                   <v-col cols="12">
                     <v-text-field
                       v-model="post.title"
+                      :rules="[() => !!post.title || 'Ce Champ dois être remplie']"
                       label="Titre"
                       required
                     ></v-text-field>
@@ -35,6 +36,7 @@
                   <v-col cols="12">
                     <v-textarea
                       v-model="post.content"
+                      :rules="[() => !!post.title || 'Ce Champ dois être remplie']"
                       label="Description du problème "
                       required
                     ></v-textarea>
@@ -45,6 +47,7 @@
                   >
                     <v-autocomplete
                       v-model="posttag"
+                      :rules="[() => !!post.title || 'Ce Champ dois être remplie']"
                       :items="['Dev', 'System', 'Reseaux', 'Cyber', 'IOT', 'Général']"
                       label="Tags"
                       multiple
@@ -65,6 +68,7 @@
               </v-btn>
               <v-btn
                 color="blue darken-1"
+                :disabled="post.title==='' || post.content==='' || posttag.length===0 "
                 text
                 @click="onPost"
               >
@@ -144,7 +148,7 @@
       v-for="item of paginatedItems"
       :key="item.id"
       class="carte"
-      @click="test(item)"
+      @click="rootQuestion(item)"
     >
       <v-card-title >{{item.title}}</v-card-title>
       <v-card-subtitle>{{item.content}}</v-card-subtitle>
@@ -198,9 +202,7 @@ export default {
   async fetch(){
     try {
       await this.$axios.get('http://thegoodnetwork.fr/index.php/api/posts').then(response => {
-        const hydraMember = response.data['hydra:member'];
-        this.data = hydraMember
-        console.log(hydraMember, 'hydramember');
+        this.data = response.data['hydra:member'];
         this.data = this.data.filter(item => item.state.name.toLowerCase().includes("en cours"));
         this.datasave = this.data
       })
@@ -243,7 +245,7 @@ export default {
         return post.tags.some(tag => this.chips.includes(tag.name))
       });
     },
-    test(item){
+    rootQuestion(item){
       this.$router.push({path: '/question', query: { id: item.id }})
     },
    async onPost(){

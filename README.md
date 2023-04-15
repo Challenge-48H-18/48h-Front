@@ -2,6 +2,13 @@
 
 ## Build Setup
 
+Lien vers le site vitrine : https://challenge-48h-18.github.io/StudyBuddy.github.io/
+
+Prérequis pour lancer le projet :
+-    Node version 17 ou ultérieure
+-    Rejoindre le discord https://discord.gg/F2dTZtnCJU (de manière à voir le webhook)
+
+
 ```bash
 # install dependencies
 $ npm install

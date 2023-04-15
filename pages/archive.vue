@@ -120,9 +120,8 @@ export default {
   async fetch(){
     try {
       await this.$axios.get('http://thegoodnetwork.fr/index.php/api/posts').then(response => {
-        const hydraMember = response.data['hydra:member'];
-        this.data = hydraMember
-        const state = ["abandonner", "terminer"]
+        this.data = response.data['hydra:member'];
+        const state = ["terminer", "abandonner"]
         const filteredData = this.data.filter(item => state.some(s => item.state.name.toLowerCase().includes(s)));
         filteredData.sort((a, b) => a.state.name.localeCompare(b.state.name));
         this.data= filteredData
